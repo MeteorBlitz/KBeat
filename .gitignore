@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Ignore MP3 files in assets folder
+app/src/main/assets/*.mp3

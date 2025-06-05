@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.kbeat.navigation.Screen
+import com.example.kbeat.screens.components.KBeatTopBar
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -31,24 +33,39 @@ fun HomeScreen(navController: NavController) {
         "Romance", "Sad", "Workout", "EDM", "Retro"
     )
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(categories) { category ->
-            CategoryItem(
-                title = category,
-                onClick = {
-                    navController.navigate(Screen.SongList.passCategory(category))
+    Scaffold(
+        topBar = {
+            KBeatTopBar(
+                title = "KBeat",
+                showBack = false,
+                onMenuClick = {
+                    // TODO: open drawer or show toast
                 }
             )
         }
+    ) { paddingValues ->
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(categories) { category ->
+                CategoryItem(
+                    title = category,
+                    onClick = {
+                        navController.navigate(Screen.SongList.passCategory(category))
+                    }
+                )
+            }
+        }
     }
 }
+
 
 @Composable
 fun CategoryItem(title: String, onClick: () -> Unit) {

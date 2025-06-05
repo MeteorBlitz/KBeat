@@ -22,7 +22,7 @@ fun KBeatNavGraph(navController: NavHostController) {
         }
         composable(Screen.SongList.route) { backStackEntry ->
             val category = backStackEntry.arguments?.getString("category") ?: "Unknown"
-            SongListScreen(category = category)
+            SongListScreen(category = category,navController)
         }
 
     }

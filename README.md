@@ -35,9 +35,7 @@ Please add 3–5 MP3 songs to `app/src/main/assets/` manually before running the
 
 ## 📸 Screenshots
 
-| Splash | HomeScreen | SongListScreen |
-|--------|------------|----------------|
-| <img src="screenshots/splash.png" width="200"/> | <img src="screenshots/home.png" width="200"/> | <img src="screenshots/song_list.png" width="200"/> |
+<table> <tr> <td><img src="screenshots/splash.png" width="220" style="border-radius: 12px;" alt="Splash"/></td> <td><img src="screenshots/home.png" width="220" style="border-radius: 12px;" alt="HomeScreen"/></td> <td><img src="screenshots/song_list.png" width="220" style="border-radius: 12px;" alt="SongListScreen"/></td> </tr> <tr> <td align="center"><strong>Splash</strong></td> <td align="center"><strong>HomeScreen</strong></td> <td align="center"><strong>SongListScreen</strong></td> </tr> </table>
 
 ---
 

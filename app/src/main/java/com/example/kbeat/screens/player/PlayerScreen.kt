@@ -51,6 +51,15 @@ fun PlayerScreen(fileName: String, title: String, navController: NavController) 
         else -> MaterialTheme.colorScheme.primary
     }
 
+    val albumArt = when {
+        title.contains("LoFi", ignoreCase = true) -> R.drawable.lofi
+        title.contains("Night", ignoreCase = true) -> R.drawable.night_flow
+        title.contains("Retro", ignoreCase = true) -> R.drawable.retro_song
+        title.contains("Heart", ignoreCase = true) -> R.drawable.heart
+        title.contains("Morning", ignoreCase = true) -> R.drawable.morning
+        else -> R.drawable.retro // default
+    }
+
     // Update progress every second
     LaunchedEffect(player) {
         while (isActive) {
@@ -117,7 +126,7 @@ fun PlayerScreen(fileName: String, title: String, navController: NavController) 
 
                 // Album Art
                 Image(
-                    painter = painterResource(R.drawable.retro),
+                    painter = painterResource(id = albumArt),
                     contentDescription = "Album Art",
                     modifier = Modifier
                         .size(250.dp)

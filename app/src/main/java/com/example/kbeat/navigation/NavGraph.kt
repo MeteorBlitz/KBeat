@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.kbeat.screens.home.HomeScreen
+import com.example.kbeat.screens.player.PlayerScreen
 import com.example.kbeat.screens.song_list.SongListScreen
 import com.example.kbeat.screens.splash.SplashScreen
 
@@ -24,6 +25,12 @@ fun KBeatNavGraph(navController: NavHostController) {
             val category = backStackEntry.arguments?.getString("category") ?: "Unknown"
             SongListScreen(category = category,navController)
         }
+        composable(Screen.Player.route) { backStackEntry ->
+            val fileName = backStackEntry.arguments?.getString("fileName") ?: ""
+            val title = backStackEntry.arguments?.getString("title") ?: ""
+            PlayerScreen(fileName = fileName, title = title, navController)
+        }
+
 
     }
 }

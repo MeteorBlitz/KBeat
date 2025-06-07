@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.kbeat.R
 import com.example.kbeat.model.sampleSongs
+import com.example.kbeat.navigation.Screen
 import com.example.kbeat.screens.components.KBeatTopBar
 
 @Composable
@@ -103,7 +104,9 @@ fun SongListScreen(category: String, navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(songs) { song ->
-                    SongItem(song)
+                    SongItem(song = song, onClick = {
+                        navController.navigate(Screen.Player.passSong(song.fileName, song.name))
+                    })
                 }
             }
         }

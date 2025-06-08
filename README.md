@@ -19,6 +19,11 @@ Please add 3–5 MP3 songs to `app/src/main/assets/` manually before running the
 - ✅ **Song model** with 5 local songs in assets
 - ✅ **Navigation setup** with category passing
 - ✅ **TopBar UI** reused in all screens
+- ✅ **PlayerScreen** to play local MP3 files
+  - added ExoPlayer dependency
+  - basic player UI with playback controls
+  - gradient background
+  - custom top bar & favorite icon placeholder
 
 ---
 
@@ -35,7 +40,21 @@ Please add 3–5 MP3 songs to `app/src/main/assets/` manually before running the
 
 ## 📸 Screenshots
 
-<table> <tr> <td><img src="screenshots/splash.png" width="220" style="border-radius: 12px;" alt="Splash"/></td> <td><img src="screenshots/home.png" width="220" style="border-radius: 12px;" alt="HomeScreen"/></td> <td><img src="screenshots/song_list.png" width="220" style="border-radius: 12px;" alt="SongListScreen"/></td> </tr> <tr> <td align="center"><strong>Splash</strong></td> <td align="center"><strong>HomeScreen</strong></td> <td align="center"><strong>SongListScreen</strong></td> </tr> </table>
+<table>
+  <tr>
+    <td><img src="screenshots/splash.png" width="220" style="border-radius: 12px;" alt="Splash"/></td>
+    <td><img src="screenshots/home.png" width="220" style="border-radius: 12px;" alt="HomeScreen"/></td>
+    <td><img src="screenshots/song_list.png" width="220" style="border-radius: 12px;" alt="SongListScreen"/></td>
+    <td><img src="screenshots/players.png" width="220" style="border-radius: 12px;" alt="PlayerScreen"/></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Splash</strong></td>
+    <td align="center"><strong>HomeScreen</strong></td>
+    <td align="center"><strong>SongListScreen</strong></td>
+    <td align="center"><strong>PlayerScreen</strong></td>
+  </tr>
+</table>
+
 
 ---
 

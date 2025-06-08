@@ -42,7 +42,7 @@ fun HomeScreen(navController: NavController) {
     ) { paddingValues ->
 
         LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)

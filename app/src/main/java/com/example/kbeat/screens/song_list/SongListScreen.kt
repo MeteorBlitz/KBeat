@@ -2,6 +2,7 @@ package com.example.kbeat.screens.song_list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.kbeat.R
-import com.example.kbeat.model.sampleSongs
 import com.example.kbeat.navigation.Screen
 import com.example.kbeat.screens.components.KBeatTopBar
+import com.example.kbeat.utils.UiState
 import com.example.kbeat.viewmodel.SongListViewModel
 
 @Composable
@@ -62,61 +64,98 @@ fun SongListScreen(
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            // Header with Image + Title
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = categoryImage),
-                    contentDescription = null,
-                    modifier = Modifier.size(80.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = category,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color.White
-                )
-            }
-
-            // Play & Shuffle buttons
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Button(onClick = { /* TODO */ }) {
-                    Text("Play")
-                }
-                Button(onClick = { /* TODO */ }) {
-                    Text("Shuffle")
+        when (val state = songsState.value) {
+            is UiState.Loading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color.White)
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            is UiState.Success -> {
+                val songs = state.data
 
-            // Song list
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(songsState.value) { song ->
-                    SongItem(song = song, onClick = {
-                        navController.navigate(Screen.Player.passSong(song.fileName, song.name))
-                    })
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    // Header with Image + Title
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = categoryImage),
+                            contentDescription = null,
+                            modifier = Modifier.size(80.dp)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = category,
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = Color.White
+                        )
+                    }
+
+                    // Play & Shuffle buttons
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Button(onClick = { /* TODO */ }) {
+                            Text("Play")
+                        }
+                        Button(onClick = { /* TODO */ }) {
+                            Text("Shuffle")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Song list
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(songs) { song ->
+                            SongItem(
+                                song = song,
+                                onClick = {
+                                    navController.navigate(
+                                        Screen.Player.passSong(song.fileName, song.name)
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            is UiState.Error -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Error: ${state.message}",
+                        color = Color.Red
+                    )
                 }
             }
         }
     }
+
 }
 

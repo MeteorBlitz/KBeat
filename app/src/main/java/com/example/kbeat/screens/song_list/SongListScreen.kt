@@ -19,21 +19,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.kbeat.R
 import com.example.kbeat.model.sampleSongs
 import com.example.kbeat.navigation.Screen
 import com.example.kbeat.screens.components.KBeatTopBar
+import com.example.kbeat.viewmodel.SongListViewModel
 
 @Composable
-fun SongListScreen(category: String, navController: NavController) {
+fun SongListScreen(
+    category: String,
+    navController: NavController,
+    viewModel: SongListViewModel = hiltViewModel()) {
 
-    val songs = sampleSongs.filter { category.lowercase() in it.categories }
+    val songsState = viewModel.songs.collectAsState()
 
     val categoryImage = when (category.lowercase()) {
         "pop" -> R.drawable.pop
@@ -104,7 +110,7 @@ fun SongListScreen(category: String, navController: NavController) {
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(songs) { song ->
+                items(songsState.value) { song ->
                     SongItem(song = song, onClick = {
                         navController.navigate(Screen.Player.passSong(song.fileName, song.name))
                     })

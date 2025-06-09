@@ -8,26 +8,21 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.kbeat.R
 import com.example.kbeat.navigation.Screen
 import com.example.kbeat.screens.components.KBeatTopBar
+import com.example.kbeat.viewmodel.HomeViewModel
 
 @Composable
-fun HomeScreen(navController: NavController) {
-    val categories = listOf(
-        Triple("Pop", R.drawable.pop, Color(0xFFFF7043)),
-        Triple("Tamil", R.drawable.tamil, Color(0xFF6A1B9A)),
-        Triple("Hindi", R.drawable.hindi, Color(0xFF4CAF50)),
-        Triple("Romance", R.drawable.romance, Color(0xFFD81B60)),
-        Triple("Sad", R.drawable.sad, Color(0xFF37474F)),
-        Triple("Workout", R.drawable.workout, Color(0xFFFFC107)),
-        Triple("EDM", R.drawable.edm, Color(0xFF7E57C2)),
-        Triple("Retro", R.drawable.retro, Color(0xFF607D8B))
-    )
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel()) {
+
+    val categories = viewModel.categories.collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
@@ -50,13 +45,13 @@ fun HomeScreen(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(categories) { (title, imgRes,bgColor)  ->
+            items(categories.value) { category ->
                 CategoryItem(
-                    title = title,
-                    categoryImageRes = imgRes,
-                    backgroundColor = bgColor,
+                    title = category.title,
+                    categoryImageRes = category.imageRes,
+                    backgroundColor = category.backgroundColor,
                     onClick = {
-                        navController.navigate(Screen.SongList.passCategory(title))
+                        navController.navigate(Screen.SongList.passCategory(category.title))
                     }
                 )
             }

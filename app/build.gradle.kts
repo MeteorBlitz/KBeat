@@ -69,6 +69,8 @@ dependencies {
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
+    // Hilt for Compose Navigation support
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // ExoPlayer
     implementation(libs.androidx.media3.exoplayer)

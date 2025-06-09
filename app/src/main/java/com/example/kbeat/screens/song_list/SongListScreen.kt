@@ -32,7 +32,8 @@ import com.example.kbeat.screens.components.KBeatTopBar
 
 @Composable
 fun SongListScreen(category: String, navController: NavController) {
-    val songs = sampleSongs // later filter based on category
+
+    val songs = sampleSongs.filter { category.lowercase() in it.categories }
 
     val categoryImage = when (category.lowercase()) {
         "pop" -> R.drawable.pop

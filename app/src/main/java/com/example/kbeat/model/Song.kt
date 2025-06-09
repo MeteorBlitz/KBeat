@@ -5,5 +5,6 @@ data class Song(
     val name: String,
     val artist: String,
     val duration: String,
-    val fileName: String // for SoundHelix-Song-1.mp3 etc.
+    val fileName: String, // for SoundHelix-Song-1.mp3 etc.
+    val categories: List<String>
 )

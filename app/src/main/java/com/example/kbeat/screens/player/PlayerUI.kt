@@ -35,10 +35,10 @@ import com.example.kbeat.model.PlayerState
 @Composable
 fun PlayerUI(
     state: PlayerState,
-    title: String,
-    albumArt: Int,
     onPlayPause: () -> Unit,
-    onSeek: (Long) -> Unit
+    onSeek: (Long) -> Unit,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -56,19 +56,18 @@ fun PlayerUI(
         Spacer(Modifier.height(16.dp))
 
         Image(
-            painter = painterResource(albumArt),
+            painter = painterResource(state.albumArtResId),
             contentDescription = null,
             modifier = Modifier.size(250.dp)
         )
 
         Spacer(Modifier.height(24.dp))
 
-        Text(title, color = Color.White, fontSize = 20.sp)
+        Text(state.title, color = Color.White, fontSize = 20.sp)
         Text("Unknown Artist", color = Color.Gray, fontSize = 14.sp)
 
         Spacer(Modifier.height(24.dp))
 
-        // SAFELY HANDLE duration
         val safeDuration = if (state.duration > 0) state.duration else 1L
         val safePosition = state.currentPosition.coerceIn(0L, safeDuration)
 
@@ -95,7 +94,7 @@ fun PlayerUI(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* TODO: Previous */ }) {
+            IconButton(onClick = onPrevious ) {
                 Icon(Icons.Default.SkipPrevious, contentDescription = null, tint = Color.White)
             }
 
@@ -108,7 +107,7 @@ fun PlayerUI(
                 )
             }
 
-            IconButton(onClick = { /* TODO: Next */ }) {
+            IconButton(onClick = onNext) {
                 Icon(Icons.Default.SkipNext, contentDescription = null, tint = Color.White)
             }
         }

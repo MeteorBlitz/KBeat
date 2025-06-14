@@ -33,12 +33,14 @@ import com.example.kbeat.R
 import com.example.kbeat.navigation.Screen
 import com.example.kbeat.screens.components.KBeatTopBar
 import com.example.kbeat.utils.UiState
+import com.example.kbeat.viewmodel.SharedSongViewModel
 import com.example.kbeat.viewmodel.SongListViewModel
 
 @Composable
 fun SongListScreen(
     category: String,
     navController: NavController,
+    sharedSongViewModel: SharedSongViewModel,
     viewModel: SongListViewModel = hiltViewModel()) {
 
     val songsState = viewModel.songs.collectAsState()
@@ -78,6 +80,7 @@ fun SongListScreen(
 
             is UiState.Success -> {
                 val songs = state.data
+                sharedSongViewModel.setSongs(songs)
 
                 Column(
                     modifier = Modifier
@@ -132,7 +135,9 @@ fun SongListScreen(
                                 song = song,
                                 onClick = {
                                     navController.navigate(
-                                        Screen.Player.passSong(song.fileName, song.name)
+                                        Screen.Player.passSong(
+                                            fileName = song.fileName
+                                        )
                                     )
                                 }
                             )

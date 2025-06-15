@@ -1,40 +1,65 @@
 # 🎧 KBeat - Jetpack Compose Music Player App
 
-KBeat is a simple offline music player app built using **Jetpack Compose**. It shows music by category and plays songs from the local `assets` folder. It is still under development and will use **MVVM**, **Navigation**, and **ExoPlayer**.
+KBeat is a modern offline music player built using **Jetpack Compose**, **ExoPlayer**, **Hilt**, and **Room**.  
+It supports category-wise filtering, favorites, shuffle, and local song playback from the `assets` folder.
 
----
-🎵 Note: MP3 files are not included in this repo.
-Please add 3–5 MP3 songs to `app/src/main/assets/` manually before running the app.
-
----
-
-## ✨ Features Completed
-
-- ✅ **SplashScreen** with logo and animation
-- ✅ **HomeScreen** with colorful category cards
-- ✅ **SongListScreen** with:
-  - Category image and title
-  - Play and Shuffle buttons
-  - Dummy song list (title, artist, duration, more options)
-- ✅ **Song model** with 5 local songs in assets
-- ✅ **Navigation setup** with category passing
-- ✅ **TopBar UI** reused in all screens
-- ✅ **PlayerScreen** to play local MP3 files
-  - added ExoPlayer dependency
-  - basic player UI with playback controls
-  - gradient background
-  - custom top bar & favorite icon placeholder
+> ⚙️ Development: MVP completed  
+> 🎵 Add your `.mp3` files manually to: `app/src/main/assets/`
 
 ---
 
-## 🛠️ Built With
+## ✅ Features Completed
 
-- 🧩 **Jetpack Compose** – UI toolkit
-- 🎵 **Media3 ExoPlayer** – Music playback (upcoming)
-- 🔁 **Navigation-Compose** – Move between screens
-- 🧠 **ViewModel + Lifecycle** – MVVM (to be added)
-- 💉 **Hilt** – Dependency injection setup
-- 📦 Static songs from `assets` folder (no backend)
+### 🖼️ SplashScreen
+- App logo with animation
+
+### 🏠 HomeScreen
+- Shows music categories in a 2x2 grid
+- Top bar includes a Favorites icon → opens FavoritesScreen
+
+### 🎶 SongListScreen
+- Lists songs from selected category
+- 🔀 Shuffle or ▶️ Play All
+- Click any song to play instantly
+
+### 🎵 PlayerScreen
+- Plays songs using **ExoPlayer**
+- Seekbar, Play/Pause, Next/Previous
+- ❤️ Add or Remove from favorites using Room DB
+
+### ❤️ FavoritesScreen
+- Displays saved songs only
+- Tapping plays song using PlayerScreen
+
+---
+
+## 🛠 Built With
+
+- 🧩 Jetpack Compose — UI toolkit
+- 💉 Hilt — Dependency Injection
+- 🎵 ExoPlayer — Media3 audio playback
+- 🧠 ViewModel — MVVM Architecture
+- 📦 Room — For storing favorite songs
+- 🔁 Navigation Compose — Screen transitions
+
+---
+
+## 📌 Planned Features
+
+- 🔊 Background audio playback
+- 🔐 DRM (protected file) support
+- 🔍 Song search via top bar
+- 🕓 Last Played / Recently Opened
+- 🎛️ Playlist support (saved user lists)
+- ☁️ Download or Export from assets
+- 🏠 Quick Links (Favorites/Playlists on home)
+
+---
+
+## 🐞 Known Bugs
+
+- In **FavoritesScreen**, if a song is removed and user clicks "Next/Previous" quickly, it may still play unless user waits or reopens the screen.
+
 
 ---
 
@@ -55,35 +80,10 @@ Please add 3–5 MP3 songs to `app/src/main/assets/` manually before running the
   </tr>
 </table>
 
-
 ---
 
-## 📌 Upcoming Features
+## 📦 How to Run
 
-| Feature                  | Description                                    |
-|-------------------------|------------------------------------------------|
-| 🎵 Music Playback       | Play songs using `ExoPlayer` on tap            |
-| 🧠 MVVM Structure        | Move logic to ViewModel                        |
-| ❤️ Favorites / Playlist | Allow users to save favorites or playlists     |
-| 🔍 SearchBar            | Add search to top bar                          |
-| 🕓 Recent / Last Played  | Track last played song using SharedPreferences |
-| 💾 Room DB              | Optional offline storage for songs             |
-| 🎨 UI Polish            | Add animations like click scale or shimmer     |
-
----
-
-## 🧑‍💻 Author
-
-**Deepak Ondimuthu**  
-[GitHub](https://github.com/MeteorBlitz) • [LinkedIn](https://www.linkedin.com/in/deepak-ondimuthu-752856a8/)
-
----
-
-## 📜 License
-
-This project is for learning and educational use.  
-Not for commercial use unless permission is given.
-
----
-
-> 🔔 *KBeat is in progress. Feel free to give suggestions or ideas!*
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/MeteorBlitz/kbeat.git

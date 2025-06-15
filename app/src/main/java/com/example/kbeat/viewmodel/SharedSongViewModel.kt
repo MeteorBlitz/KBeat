@@ -22,9 +22,10 @@ class SharedSongViewModel @Inject constructor() : ViewModel() {
         val startFile = playList.firstOrNull()?.fileName ?: return
 
         setSongs(playList) // Set shuffled or ordered list
-        navController.navigate(
-            Screen.Player.passSong(fileName = startFile)
-        )
+        navController.navigate(Screen.Player.passSong(startFile)) {
+            popUpTo(Screen.Player.route) { inclusive = true }
+            launchSingleTop = true
+        }
     }
 
 }

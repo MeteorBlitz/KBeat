@@ -1,33 +1,25 @@
 package com.example.kbeat.screens.player
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.kbeat.data.local.FavoriteSongEntity
+import com.example.kbeat.model.Song
 import com.example.kbeat.screens.components.KBeatTopBar
 import com.example.kbeat.utils.UiState
 import com.example.kbeat.viewmodel.FavoritesViewModel
 import com.example.kbeat.viewmodel.PlayerViewModel
 import com.example.kbeat.viewmodel.SharedSongViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,8 +27,9 @@ fun PlayerScreen(
     fileName: String,
     sharedSongViewModel: SharedSongViewModel,
     navController: NavController,
-    favoritesViewModel: FavoritesViewModel = hiltViewModel()) {
-
+    playerViewModel: PlayerViewModel = hiltViewModel(),
+    favoritesViewModel: FavoritesViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     val songList = sharedSongViewModel.getSongs()
 
@@ -50,53 +43,52 @@ fun PlayerScreen(
         return
     }
 
-    val viewModel = remember { PlayerViewModel(context, songList, fileName) }
-    val playerState by viewModel.playerState.collectAsState()
-    val currentTitle by viewModel.currentSongTitle.collectAsState()
-    val currentColor by viewModel.dominantColor.collectAsState()
+    // Trigger only once when fileName changes
+    LaunchedEffect(key1 = fileName) {
+        playerViewModel.setSongsAndPlay(songList, fileName)
+    }
 
+    val playerState by playerViewModel.playerState.collectAsState()
+    val currentTitle by playerViewModel.currentSongTitle.collectAsState()
+    val currentColor by playerViewModel.dominantColor.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    val currentSong = playerState.let {
-        if (it is UiState.Success) it.data else null
-    }
+    val currentSong = (playerState as? UiState.Success)?.data
     val favoritesState = favoritesViewModel.favoriteSongs.collectAsState().value
-    val isFavorite = if (favoritesState is UiState.Success && currentSong != null) {
-        favoritesState.data.any { it.fileName == currentSong.fileName }
-    } else {
-        false
-    }
 
-    val dominantColor = currentColor
+    val isFavorite = favoritesState is UiState.Success &&
+            currentSong != null &&
+            favoritesState.data.any { it.fileName == currentSong.fileName }
 
+    // Release ExoPlayer on back press or recomposition destroy
     DisposableEffect(Unit) {
         onDispose {
-            viewModel.releasePlayer()
+            playerViewModel.releasePlayer()
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             KBeatTopBar(
                 title = currentTitle,
                 showBack = true,
                 onBackClick = { navController.popBackStack() },
-                backgroundColor = Color.Transparent,
+                backgroundColor = Color.Transparent
             )
         },
         containerColor = Color.Transparent
-    ) { padding ->
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(dominantColor.copy(alpha = 0.85f), Color.Black)
+                        colors = listOf(currentColor.copy(alpha = 0.85f), Color.Black)
                     )
                 )
-                .padding(padding)
+                .padding(paddingValues)
         ) {
             when (val state = playerState) {
                 is UiState.Loading -> {
@@ -107,29 +99,57 @@ fun PlayerScreen(
                         CircularProgressIndicator()
                     }
                 }
+
                 is UiState.Error -> {
-                    Text("Playback Error: ${state.message}")
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Playback Error: ${state.message}",
+                            color = Color.Red,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
                 }
+
                 is UiState.Success -> {
                     PlayerUI(
                         state = state.data,
-                        onPlayPause = { viewModel.togglePlayPause() },
-                        onSeek = { viewModel.seekTo(it) },
-                        onPrevious = { viewModel.previous() },
-                        onNext = { viewModel.next() },
+                        onPlayPause = { playerViewModel.togglePlayPause() },
+                        onSeek = { playerViewModel.seekTo(it) },
+                        onPrevious = { playerViewModel.previous() },
+                        onNext = { playerViewModel.next() },
                         isFavorite = isFavorite,
                         onFavoriteToggle = {
                             currentSong?.let { song ->
                                 val favSong = FavoriteSongEntity(
                                     fileName = song.fileName,
                                     name = song.title,
-                                    artist = song.artist ?: "Unknown",
+                                    artist = song.artist.ifEmpty { "Unknown" },
                                     duration = song.duration.toString()
                                 )
+
                                 coroutineScope.launch {
                                     if (isFavorite) {
                                         favoritesViewModel.removeFavorite(song.fileName)
                                         snackbarHostState.showSnackbar("Removed from Favorites")
+                                        // Optional small delay
+                                        delay(300)
+                                        val updatedFavorites = favoritesViewModel.favoriteSongs.value
+                                        if (updatedFavorites is UiState.Success) {
+                                            val updatedList = updatedFavorites.data.mapIndexed { index, fav ->
+                                                Song(
+                                                    id = index + 1,
+                                                    name = fav.name,
+                                                    fileName = fav.fileName,
+                                                    artist = fav.artist,
+                                                    duration = fav.duration,
+                                                    categories = listOf("Favorites")
+                                                )
+                                            }
+                                            playerViewModel.updateSongList(updatedList)
+                                        }
                                     } else {
                                         favoritesViewModel.addFavorite(favSong)
                                         snackbarHostState.showSnackbar("Added to Favorites")

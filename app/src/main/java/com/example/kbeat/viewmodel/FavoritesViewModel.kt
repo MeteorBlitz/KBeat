@@ -7,14 +7,11 @@ import com.example.kbeat.data.repository.FavoritesRepository
 import com.example.kbeat.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
@@ -38,7 +35,6 @@ class FavoritesViewModel @Inject constructor(
                     _favoriteSongs.value = UiState.Error(e.message ?: "Unknown error")
                 }
                 .collect { songs ->
-                    delay(600) // Add small delay for better UX
                     _favoriteSongs.value = UiState.Success(songs)
                 }
         }

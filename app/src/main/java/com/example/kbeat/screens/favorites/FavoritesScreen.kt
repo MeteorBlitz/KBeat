@@ -24,14 +24,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.kbeat.model.Song
 import com.example.kbeat.screens.components.KBeatTopBar
 import com.example.kbeat.utils.UiState
 import com.example.kbeat.viewmodel.FavoritesViewModel
+import com.example.kbeat.viewmodel.SharedSongViewModel
 
 @Composable
 fun FavoritesScreen(
     navController: NavController,
+    sharedSongViewModel: SharedSongViewModel,
     viewModel: FavoritesViewModel = hiltViewModel()
+
 ) {
     val state by viewModel.favoriteSongs.collectAsState()
 
@@ -78,9 +82,24 @@ fun FavoritesScreen(
                             .padding(paddingValues)
                     ) {
                         items(favorites) { song ->
-                            FavoriteItem(song = song, onRemove = {
-                                viewModel.removeFavorite(song.fileName)
-                            })
+                            FavoriteItem(
+                                song = song,
+                                onRemove = { viewModel.removeFavorite(song.fileName) },
+                                onClick = {
+                                    val songs = favorites.mapIndexed { index, it ->
+                                        Song(
+                                            id = index + 1,
+                                            name = it.name,
+                                            fileName = it.fileName,
+                                            artist = it.artist,
+                                            duration = it.duration,
+                                            categories = listOf("Favorites")
+                                        )
+                                    }
+                                    sharedSongViewModel.startPlayer(navController, songs)
+                                }
+                            )
+
                         }
                     }
                 }

@@ -46,7 +46,7 @@ fun KBeatNavGraph(navController: NavHostController) {
             )
         }
         composable(Screen.Favorites.route) {
-            FavoritesScreen(navController = navController)
+            FavoritesScreen(navController = navController, sharedSongViewModel = sharedSongViewModel)
         }
     }
 }

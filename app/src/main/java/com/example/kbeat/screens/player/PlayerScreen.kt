@@ -34,7 +34,8 @@ import kotlinx.coroutines.launch
 fun PlayerScreen(
     fileName: String,
     sharedSongViewModel: SharedSongViewModel,
-    navController: NavController) {
+    navController: NavController,
+    favoritesViewModel: FavoritesViewModel = hiltViewModel()) {
 
     val context = LocalContext.current
     val songList = sharedSongViewModel.getSongs()
@@ -50,7 +51,6 @@ fun PlayerScreen(
     }
 
     val viewModel = remember { PlayerViewModel(context, songList, fileName) }
-    val favoritesViewModel: FavoritesViewModel = hiltViewModel()
     val playerState by viewModel.playerState.collectAsState()
     val currentTitle by viewModel.currentSongTitle.collectAsState()
     val currentColor by viewModel.dominantColor.collectAsState()
@@ -61,8 +61,12 @@ fun PlayerScreen(
     val currentSong = playerState.let {
         if (it is UiState.Success) it.data else null
     }
-    val isFavorite = favoritesViewModel.favoriteSongs.collectAsState().value
-        .any { it.fileName == currentSong?.fileName }
+    val favoritesState = favoritesViewModel.favoriteSongs.collectAsState().value
+    val isFavorite = if (favoritesState is UiState.Success && currentSong != null) {
+        favoritesState.data.any { it.fileName == currentSong.fileName }
+    } else {
+        false
+    }
 
     val dominantColor = currentColor
 

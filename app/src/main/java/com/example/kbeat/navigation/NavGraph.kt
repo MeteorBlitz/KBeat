@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.kbeat.screens.favorites.FavoritesScreen
 import com.example.kbeat.screens.home.HomeScreen
 import com.example.kbeat.screens.player.PlayerScreen
 import com.example.kbeat.screens.song_list.SongListScreen
@@ -43,6 +44,9 @@ fun KBeatNavGraph(navController: NavHostController) {
                 sharedSongViewModel = sharedSongViewModel,
                 navController = navController
             )
+        }
+        composable(Screen.Favorites.route) {
+            FavoritesScreen(navController = navController)
         }
     }
 }

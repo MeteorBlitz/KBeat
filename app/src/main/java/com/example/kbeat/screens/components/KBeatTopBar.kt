@@ -2,6 +2,7 @@ package com.example.kbeat.screens.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,6 +21,8 @@ fun KBeatTopBar(
     showBack: Boolean = false,
     onBackClick: (() -> Unit)? = null,
     onMenuClick: (() -> Unit)? = null,
+    showFavorite: Boolean = false,
+    onFavoriteClick: (() -> Unit)? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.surface
 ) {
     TopAppBar(
@@ -38,6 +41,13 @@ fun KBeatTopBar(
             } else if (onMenuClick != null) {
                 IconButton(onClick = onMenuClick) {
                     Icon(Icons.Default.Menu, contentDescription = "Menu")
+                }
+            }
+        },
+        actions = {
+            if (showFavorite && onFavoriteClick != null) {
+                IconButton(onClick = onFavoriteClick) {
+                    Icon(Icons.Default.FavoriteBorder, contentDescription = "Favorite")
                 }
             }
         }

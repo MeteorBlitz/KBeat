@@ -37,6 +37,10 @@ fun HomeScreen(
                 showBack = false,
                 onMenuClick = {
                     // TODO: open drawer or show toast
+                },
+                showFavorite = true,
+                onFavoriteClick = {
+                    navController.navigate(Screen.Favorites.route)
                 }
             )
         }

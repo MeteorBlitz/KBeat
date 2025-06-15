@@ -11,4 +11,5 @@ sealed class Screen(val route: String) {
             return "player/$fileName"
         }
     }
+    object Favorites : Screen("favorites")
 }

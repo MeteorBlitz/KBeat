@@ -72,6 +72,11 @@ dependencies {
     // Hilt for Compose Navigation support
     implementation(libs.androidx.hilt.navigation.compose)
 
+    //Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
     // ExoPlayer
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui.compose)

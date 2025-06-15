@@ -114,10 +114,14 @@ fun SongListScreen(
                             .padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Button(onClick = { /* TODO */ }) {
+                        Button(onClick = {
+                            sharedSongViewModel.startPlayer(navController, songs, shuffle = false)
+                        }) {
                             Text("Play")
                         }
-                        Button(onClick = { /* TODO */ }) {
+                        Button(onClick = {
+                            sharedSongViewModel.startPlayer(navController, songs, shuffle = true)
+                        }) {
                             Text("Shuffle")
                         }
                     }

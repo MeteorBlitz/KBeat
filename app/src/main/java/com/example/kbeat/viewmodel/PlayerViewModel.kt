@@ -82,6 +82,7 @@ class PlayerViewModel(
         currentState = PlayerState(
             fileName = song.fileName,
             title = song.name,
+            artist = song.artist,
             albumArtResId = albumArt,
             isPlaying = true,
             currentPosition = 0L,

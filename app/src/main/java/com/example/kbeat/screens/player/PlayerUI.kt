@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -39,6 +40,8 @@ fun PlayerUI(
     onSeek: (Long) -> Unit,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
+    isFavorite: Boolean,
+    onFavoriteToggle: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -48,8 +51,12 @@ fun PlayerUI(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(Modifier.fillMaxWidth(), Arrangement.End) {
-            IconButton(onClick = { /* TODO: Add favorite */ }) {
-                Icon(Icons.Default.FavoriteBorder, contentDescription = "Favorite", tint = Color.White)
+            IconButton(onClick = onFavoriteToggle) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = "Favorite",
+                    tint = Color.White
+                )
             }
         }
 
@@ -64,7 +71,7 @@ fun PlayerUI(
         Spacer(Modifier.height(24.dp))
 
         Text(state.title, color = Color.White, fontSize = 20.sp)
-        Text("Unknown Artist", color = Color.Gray, fontSize = 14.sp)
+        Text(state.artist, color = Color.Gray, fontSize = 14.sp)
 
         Spacer(Modifier.height(24.dp))
 
